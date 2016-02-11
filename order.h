@@ -13,6 +13,7 @@ class Order {
     int r, c;
 
     vector<int> product_quantities;
+
 };
 
 #endif //HASH_CODE_ORDER_H

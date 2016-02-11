@@ -9,9 +9,11 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 #include "product.h"
 #include "warehouse.h"
+#include "order.h"
 
 using namespace std;
 
@@ -23,6 +25,9 @@ struct Simulation {
     vector<Warehouse> warehouses;
 
     Simulation(string filename);
+
+
+    vector<vector<int>> locateObjects(Order o);
 };
 
 #endif //HASH_CODE_SIMULATION_H
