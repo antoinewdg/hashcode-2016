@@ -50,13 +50,19 @@ struct Drone {
     int unavailable_for;
 
 
-    list <Command> history;
+    list<Command *> history;
 
     Drone() : unavailable_for(0) { }
 
+    ~Drone() {
+        for (Command *c : history) {
+            delete c;
+        }
+    }
+
     void give_instruction(vector<LoadCommand> cmds, int t) {
         for (LoadCommand cmd : cmds) {
-            history.push_back(cmd);
+            history.push_back(new LoadCommand(cmd));
             unavailable_for += time_to_travel(cmd.w->r, cmd.w->c) + 1;
             r = cmd.w->r;
             c = cmd.w->r;
@@ -67,7 +73,7 @@ struct Drone {
             deliver.order = cmd.order;
             deliver.quantity = cmd.quantity;
             deliver.order = cmd.order;
-            history.push_back(deliver);
+            history.push_back(new DeliverCommand(deliver));
 
             unavailable_for += time_to_travel(deliver.order->r, deliver.order->c) + 1;
             r = deliver.order->r;
@@ -85,9 +91,9 @@ struct Drone {
     }
 
     void write_history(ostream &os) {
-        for (Command cmd : history) {
+        for (Command *cmd : history) {
             os << id << " ";
-            cmd.write_to(os);
+            cmd->write_to(os);
             os << endl;
         }
     }
