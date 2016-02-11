@@ -63,7 +63,7 @@ struct Simulation {
 
     bool droneAvailable();
 
-    list<Drone&> available_drones();
+    list<Drone*> available_drones();
 
     void processOrders();
 
