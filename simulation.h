@@ -10,6 +10,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <list>
 
 #include "product.h"
 #include "warehouse.h"
@@ -61,6 +62,8 @@ struct Simulation {
     vector<vector<Drone::LoadCommand>> locateObjects(Order o);
 
     bool droneAvailable();
+
+    list<Drone&> available_drones();
 
     void processOrders();
 
