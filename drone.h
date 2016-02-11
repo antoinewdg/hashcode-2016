@@ -50,7 +50,7 @@ struct Drone {
     int unavailable_for;
 
 
-    list<Command> history;
+    list <Command> history;
 
     Drone() : unavailable_for(0) { }
 
@@ -82,6 +82,14 @@ struct Drone {
         deliver.order = cmds[0].order;
         history.push_back(DeliverCommand())
 
+    }
+
+    void write_history(ostream &os) {
+        for (Command cmd : history) {
+            os << id << " ";
+            cmd.write_to(os);
+            os << endl;
+        }
     }
 
     double time_to_travel(int r2, int c2) {
