@@ -24,6 +24,7 @@ Simulation::Simulation(string filename) {
         payload = atoi(token.c_str());
     }
 
+
     getline(file, line);
     n_products = atoi(line.c_str());
     {
@@ -42,6 +43,7 @@ Simulation::Simulation(string filename) {
 
     for (int i = 0; i < n_warehouses; i++) {
         {
+            warehouses[i].id = i;
             getline(file, line);
             stringstream ss(line);
             getline(ss, token, ' ');
@@ -65,6 +67,7 @@ Simulation::Simulation(string filename) {
     orders = vector<Order>(n_orders);
 
     for (int i = 0; i < n_orders; i++) {
+        orders[i].id = i;
         getline(file, line);
         {
             stringstream ss(line);
@@ -84,6 +87,13 @@ Simulation::Simulation(string filename) {
                 orders[i].product_quantities[atoi(token.c_str())]++;
             }
         }
+    }
+
+    drones = vector<Drone>(n_drones);
+    for (int i = 0; i < n_drones; i++) {
+        drones[i].id = i;
+        drones[i].r = warehouses[0].r;
+        drones[i].c = warehouses[i].c;
     }
 
 //    cout << getline(file, line) << endl;

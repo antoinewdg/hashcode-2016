@@ -10,7 +10,7 @@
 using namespace std;
 
 struct Order {
-    int r, c;
+    int r, c, id;
 
     vector<int> product_quantities;
 

@@ -7,6 +7,10 @@
 
 struct Drone {
     int id;
+    int r, c;
+    bool available;
+
+    Drone() : available(true) { }
 };
 
 #endif //HASH_CODE_DRONE_H

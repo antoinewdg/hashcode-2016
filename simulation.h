@@ -14,6 +14,7 @@
 #include "product.h"
 #include "warehouse.h"
 #include "order.h"
+#include "drone.h"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ struct Simulation {
     vector<Product> products;
     vector<Warehouse> warehouses;
     vector<Order> orders;
+    vector<Drone> drones;
 
     Simulation(string filename);
 
@@ -47,6 +49,7 @@ struct Simulation {
             w.product_quantities[i] = 0;
         }
     };
+
     vector<vector<int>> locateObjects(Order o);
 };
 
