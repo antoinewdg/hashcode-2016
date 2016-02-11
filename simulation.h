@@ -28,6 +28,25 @@ struct Simulation {
     Simulation(string filename);
 
 
+    void takeInWarehouse(Warehouse &w, Order &o, vector<int> &command, int i, int numb, int &charge) {
+        int weight = products[i].weight;
+        if (w.product_quantities[i] >= numb) {
+            w.product_quantities[i] -= numb;
+            o.product_quantities[i] -= numb;
+            command.push_back(w.id);
+            command.push_back(i);
+            command.push_back(numb);
+            charge += numb * weight;
+        }
+        else {
+            o.product_quantities[i] -= w.product_quantities[i];
+            command.push_back(w.id);
+            command.push_back(i);
+            command.push_back(w.product_quantities[i]);
+            charge += w.product_quantities[i] * weight;
+            w.product_quantities[i] = 0;
+        }
+    };
     vector<vector<int>> locateObjects(Order o);
 };
 
