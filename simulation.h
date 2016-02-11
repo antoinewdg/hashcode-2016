@@ -47,7 +47,13 @@ struct Simulation {
             w.product_quantities[i] = 0;
         }
     };
+
+
     vector<vector<int>> locateObjects(Order o);
+    bool droneAvailable();
+
+    void processOrders();
+
 };
 
 ostream &operator<<(ostream &os, const Simulation &s);

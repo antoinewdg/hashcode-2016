@@ -134,6 +134,7 @@ vector<vector<int>> Simulation::locateObjects(Order o) {
     bool finished = false;
     while (!finished) {
         vector<int> command;
+        command.push_back(o.id);
         int charge = 0;
         for (Warehouse w: wares) {
             for (int i = 0; i < n_products; i++) {
@@ -163,4 +164,29 @@ vector<vector<int>> Simulation::locateObjects(Order o) {
         }
     }
     return commands;
+}
+
+void Simulation::processOrders() {
+
+    vector<Order> toDo(orders);
+    vector<vector<int>> commands;
+
+    for (Order o: toDo) {
+        vector<vector<int>> temp = locateObjects(o);
+        for (vector<int> c: temp) {
+            commands.push_back(c);
+        }
+    }
+
+    for (int t = 0; t < t_max; t++) {
+
+
+    }
+
+}
+
+bool Simulation::droneAvailable() {
+    bool result = false;
+
+    return result;
 }
