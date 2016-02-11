@@ -25,22 +25,22 @@ struct Drone {
         Product *p;
         int quantity;
 
-        virtual void write_to(ostream &out);
+        virtual void write_to(ostream &out) = 0;
     };
 
-    struct LoadCommand : Command {
+    struct LoadCommand : public Command {
         Order *order;
         Warehouse *w;
 
-        void write_to(ostream &out) {
+        virtual void write_to(ostream &out) {
             out << "L " << w->id << " " << p->id << " " << quantity;
         }
     };
 
-    struct DeliverCommand : Command {
+    struct DeliverCommand : public Command {
         Order *order;
 
-        void write_to(ostream &out) {
+        virtual void write_to(ostream &out) {
             out << "D " << order->id << " " << p->id << " " << quantity;
         }
     };
@@ -73,14 +73,6 @@ struct Drone {
             r = deliver.order->r;
             c = deliver.order->c;
         }
-
-        unavailable_for += time_to_travel(cmds.back().order->r, cmds.back().order->c) + 1;
-        r = cmds.back().order->r;
-        c = cmds.back().order->c;
-
-        DeliverCommand deliver;
-        deliver.order = cmds[0].order;
-        history.push_back(DeliverCommand())
 
     }
 
