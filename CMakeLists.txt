@@ -4,5 +4,5 @@ project(hash_code)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-set(SOURCE_FILES src/main.cpp)
+set(SOURCE_FILES src/main.cpp simulation.cpp simulation.h product.cpp product.cpp product.h warehouse.cpp warehouse.h order.cpp order.h)
 add_executable(hash_code ${SOURCE_FILES})
