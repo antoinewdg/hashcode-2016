@@ -12,11 +12,19 @@
 
 struct Drone {
 
-    struct LoadCommand {
-        Order* order;
-        Warehouse* w;
-        Product* p;
+    struct Command {
+        int time;
+        Product *p;
         int quantity;
+    };
+
+    struct LoadCommand : Command {
+        Order *order;
+        Warehouse *w;
+    };
+
+    struct DeliverCommand : Command {
+        Order *order;
     };
 
     int id;
