@@ -192,7 +192,7 @@ void Simulation::processOrders() {
 
     int c = 0;
     for (int t = 0; t < t_max; t++) {
-        list <Drone> availableDrones = update_drones();
+        list<Drone&> availableDrones = available_drones();
 
         for (Drone d: availableDrones) {
             d.give_instruction(commands[c], t);
@@ -215,6 +215,7 @@ void Simulation::processOrders() {
 //            }
 //        }
 
+        update_drones();
     }
 
 }
