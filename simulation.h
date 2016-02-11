@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 #include "product.h"
 #include "warehouse.h"
@@ -25,6 +26,9 @@ struct Simulation {
     vector<Order> orders;
 
     Simulation(string filename);
+
+
+    vector<vector<int>> locateObjects(Order o);
 };
 
 ostream &operator<<(ostream &os, const Simulation &s);
