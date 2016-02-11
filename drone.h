@@ -49,7 +49,8 @@ struct Drone {
     int r, c;
     int unavailable_for;
 
-    list<LoadCommand> history;
+
+    list<Command> history;
 
     Drone() : unavailable_for(0) { }
 
@@ -61,9 +62,25 @@ struct Drone {
             c = cmd.w->r;
         }
 
+        for (LoadCommand cmd : cmds) {
+            DeliverCommand deliver;
+            deliver.order = cmd.order;
+            deliver.quantity = cmd.quantity;
+            deliver.order = cmd.order;
+            history.push_back(deliver);
+
+            unavailable_for += time_to_travel(deliver.order->r, deliver.order->c) + 1;
+            r = deliver.order->r;
+            c = deliver.order->c;
+        }
+
         unavailable_for += time_to_travel(cmds.back().order->r, cmds.back().order->c) + 1;
         r = cmds.back().order->r;
         c = cmds.back().order->c;
+
+        DeliverCommand deliver;
+        deliver.order = cmds[0].order;
+        history.push_back(DeliverCommand())
 
     }
 
