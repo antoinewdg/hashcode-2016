@@ -58,7 +58,7 @@ struct Simulation {
 
     int time_for_operation(int r1, int c1, int r2, int c2);
 
-    vector<Drone::LoadCommand> locateObjects(Order o);
+    vector<vector<Drone::LoadCommand>> locateObjects(Order o);
 
     bool droneAvailable();
 
