@@ -196,7 +196,19 @@ void Simulation::processOrders() {
 }
 
 bool Simulation::droneAvailable() {
-    bool result = false;
+    for (Drone d : drones) {
+        if (d.unavailable_for == 0) {
+            return true;
+        }
+    }
 
-    return result;
+    return false;
+}
+
+void Simulation::update_drones() {
+    for (Drone d : drones) {
+        if (d.unavailable_for > 0) {
+            d.unavailable_for--;
+        }
+    }
 }

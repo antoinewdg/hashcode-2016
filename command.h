@@ -23,6 +23,7 @@ struct Command {
 
 ostream &operator<<(ostream &os, const Command &c) {
     os << c.drone->id << " " << c.tag << " " << c.warehouse->id << " " << c.product->id << " " << c.n_products;
+    return os;
 }
 
 

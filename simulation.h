@@ -57,6 +57,8 @@ struct Simulation {
 
     void processOrders();
 
+    void update_drones();
+
 };
 
 ostream &operator<<(ostream &os, const Simulation &s);
