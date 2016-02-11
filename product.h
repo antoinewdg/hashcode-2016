@@ -7,7 +7,7 @@
 
 struct Product {
     int weight;
-
+    int id;
 };
 
 #endif //HASH_CODE_PRODUCT_H

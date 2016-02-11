@@ -33,6 +33,7 @@ Simulation::Simulation(string filename) {
         for (int i = 0; i < n_products; i++) {
             getline(ss, token, ' ');
             products[i].weight = atoi(token.c_str());
+            products[i].id = i;
         }
     }
     getline(file, line);
