@@ -2,6 +2,7 @@
 // Created by antoinewdg on 2/11/16.
 //
 
+#include <list>
 #include "simulation.h"
 
 Simulation::Simulation(string filename) {
@@ -188,8 +189,30 @@ void Simulation::processOrders() {
         }
     }
 
+    int c = 0;
     for (int t = 0; t < t_max; t++) {
+        list<Drone> availableDrones = update_drones();
 
+        for (Drone d: availableDrones) {
+            d.give_instruction(commands[c], t);
+            c++;
+        }
+
+//        for (vector<int> command: commands) {
+//            Order o = orders[command[0]];
+//
+//            for (int w = 0; w < command.size() / 3; w++) {
+//                Warehouse ware = warehouses[command[w * 3 + 1]];
+//                Product p = products[command[w * 3 + 2]];
+//                int number = command[w * 3 + 3];
+//
+//                int time = time_for_operation(o.r, o.c, ware.r, ware.c);
+//
+//
+//
+//
+//            }
+//        }
 
     }
 
@@ -199,4 +222,9 @@ bool Simulation::droneAvailable() {
     bool result = false;
 
     return result;
+}
+
+int Simulation::time_for_operation(int r1, int c1, int r2, int c2) {
+    double temp = sqrt(pow(r1 - r2, 2) + pow(c1 - c2, 2));
+    return floor(temp) + 2;
 }
