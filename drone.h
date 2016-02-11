@@ -8,6 +8,7 @@
 #include <cmath>
 #include <vector>
 #include <list>
+#include <iostream>
 
 #include "order.h"
 #include "warehouse.h"
@@ -23,22 +24,32 @@ struct Drone {
         int time;
         Product *p;
         int quantity;
+
+        virtual void write_to(ostream &out);
     };
 
     struct LoadCommand : Command {
         Order *order;
         Warehouse *w;
+
+        void write_to(ostream &out) {
+            out << "L " << w->id << " " << p->id << " " << quantity;
+        }
     };
 
     struct DeliverCommand : Command {
         Order *order;
+
+        void write_to(ostream &out) {
+            out << "D " << order->id << " " << p->id << " " << quantity;
+        }
     };
 
     int id;
     int r, c;
     int unavailable_for;
 
-    list <LoadCommand> history;
+    list<LoadCommand> history;
 
     Drone() : unavailable_for(0) { }
 
