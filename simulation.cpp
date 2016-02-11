@@ -8,51 +8,54 @@ Simulation::Simulation(string filename) {
     ifstream file(filename);
     string line, token;
     vector<float> res;
-    stringstream ss(line);
 
-    getline(file, line);
-    ss = stringstream(line);
-    getline(ss, token, ' ');
-    rows = atoi(token.c_str());
-    getline(ss, token, ' ');
-    cols = atoi(token.c_str());
-    getline(ss, token, ' ');
-    n_drones = atoi(token.c_str());
-    getline(ss, token, ' ');
-    t_max = atoi(token.c_str());
-    getline(ss, token, ' ');
-    payload = atoi(token.c_str());
-
+    {
+        getline(file, line);
+        stringstream ss(line);
+        getline(ss, token, ' ');
+        rows = atoi(token.c_str());
+        getline(ss, token, ' ');
+        cols = atoi(token.c_str());
+        getline(ss, token, ' ');
+        n_drones = atoi(token.c_str());
+        getline(ss, token, ' ');
+        t_max = atoi(token.c_str());
+        getline(ss, token, ' ');
+        payload = atoi(token.c_str());
+    }
 
     getline(file, line);
     n_products = atoi(line.c_str());
-
-    getline(file, line);
-    ss = stringstream(line);
-    products = vector<Product>(n_products);
-    for (int i = 0; i < n_products; i++) {
-        getline(ss, token, ' ');
-        products[i].weight = atoi(token.c_str());
+    {
+        getline(file, line);
+        stringstream ss(line);
+        products = vector<Product>(n_products);
+        for (int i = 0; i < n_products; i++) {
+            getline(ss, token, ' ');
+            products[i].weight = atoi(token.c_str());
+        }
     }
-
     getline(file, line);
     n_warehouses = atoi(line.c_str());
     warehouses = vector<Warehouse>(n_warehouses);
 
     for (int i = 0; i < n_warehouses; i++) {
-        getline(file, line);
-        ss = stringstream(line);
-        getline(ss, token, ' ');
-        warehouses[i].r = atoi(token.c_str());
-        getline(ss, token, ' ');
-        warehouses[i].c = atoi(token.c_str());
-
-        warehouses[i].product_quantities = vector<int>(n_products);
-        getline(file, line);
-        ss = stringstream(line);
-        for (int j = 0; j < n_products; j++) {
+        {
+            getline(file, line);
+            stringstream ss(line);
             getline(ss, token, ' ');
-            warehouses[i].product_quantities[j] = atoi(token.c_str());
+            warehouses[i].r = atoi(token.c_str());
+            getline(ss, token, ' ');
+            warehouses[i].c = atoi(token.c_str());
+        }
+        {
+            warehouses[i].product_quantities = vector<int>(n_products);
+            getline(file, line);
+            stringstream ss(line);
+            for (int j = 0; j < n_products; j++) {
+                getline(ss, token, ' ');
+                warehouses[i].product_quantities[j] = atoi(token.c_str());
+            }
         }
     }
 
@@ -62,20 +65,23 @@ Simulation::Simulation(string filename) {
 
     for (int i = 0; i < n_orders; i++) {
         getline(file, line);
-        ss = stringstream(line);
-        getline(ss, token, ' ');
-        orders[i].r = atoi(token.c_str());
-        getline(ss, token, ' ');
-        orders[i].c = atoi(token.c_str());
-
+        {
+            stringstream ss(line);
+            getline(ss, token, ' ');
+            orders[i].r = atoi(token.c_str());
+            getline(ss, token, ' ');
+            orders[i].c = atoi(token.c_str());
+        }
         getline(file, line);
         int product_number = atoi(line.c_str());
         getline(file, line);
-        ss = stringstream(line);
-        orders[i].product_quantities = vector<int>(n_products);
-        for (int j = 0; j < product_number; j++) {
-            getline(ss, token, ' ');
-            orders[i].product_quantities[atoi(token.c_str())]++;
+        {
+            stringstream ss(line);
+            orders[i].product_quantities = vector<int>(n_products);
+            for (int j = 0; j < product_number; j++) {
+                getline(ss, token, ' ');
+                orders[i].product_quantities[atoi(token.c_str())]++;
+            }
         }
     }
 
@@ -117,7 +123,7 @@ ostream &operator<<(ostream &os, const Simulation &s) {
 vector<vector<int>> Simulation::locateObjects(Order o) {
     vector<vector<int>> commands;
     vector<Warehouse> wares(warehouses);
-    sort(wares.begin(), wares.end(), [](Warehouse w1, Warehouse w2) {
+    sort(wares.begin(), wares.end(), [&o](Warehouse w1, Warehouse w2) {
         double dist1 = pow((w1.r - o.r), 2) + pow(w1.c - o.c, 2);
         double dist2 = pow((w2.r - o.r), 2) + pow(w2.c - o.c, 2);
 
@@ -129,11 +135,10 @@ vector<vector<int>> Simulation::locateObjects(Order o) {
         vector<int> command;
         int charge = 0;
         for (Warehouse w: wares) {
-            command.push_back(w.id);
             for (int i = 0; i < n_products; i++) {
 
                 int numb = o.product_quantities[i];
-                int weight = products[i];
+                int weight = products[i].weight;
 
                 numb = min(numb, (payload - charge) / weight);
 
@@ -141,22 +146,7 @@ vector<vector<int>> Simulation::locateObjects(Order o) {
                     continue;
                 }
                 else {
-                    if (w.product_quantities[i] >= numb) {
-                        w.product_quantities[i] -= numb;
-                        o.product_quantities[i] -= numb;
-                        command.push_back(w.id);
-                        command.push_back(i);
-                        command.push_back(numb);
-                        charge += numb * weight;
-                    }
-                    else {
-                        o.product_quantities[i] -= w.product_quantities[i];
-                        command.push_back(w.id);
-                        command.push_back(i);
-                        command.push_back(w.product_quantities[i]);
-                        charge += w.product_quantities[i] * weight;
-                        w.product_quantities[i] = 0;
-                    }
+                    takeInWarehouse(w, o, command, i, numb, charge);
                 }
             }
         }
