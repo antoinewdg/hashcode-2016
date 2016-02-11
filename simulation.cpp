@@ -132,8 +132,8 @@ ostream &operator<<(ostream &os, const Simulation &s) {
 }
 
 
-vector<Drone::LoadCommand> Simulation::locateObjects(Order o) {
-    vector<Drone::LoadCommand> commands;
+vector<vector<Drone::LoadCommand>> Simulation::locateObjects(Order o) {
+    vector<vector<Drone::LoadCommand>> commands;
     vector<Warehouse> wares(warehouses);
     sort(wares.begin(), wares.end(), [&o](Warehouse w1, Warehouse w2) {
         double dist1 = pow((w1.r - o.r), 2) + pow(w1.c - o.c, 2);
@@ -144,7 +144,8 @@ vector<Drone::LoadCommand> Simulation::locateObjects(Order o) {
 
     bool finished = false;
     while (!finished) {
-        Drone::LoadCommand lc;
+        vector<Drone::LoadCommand> command;
+
         int charge = 0;
         for (Warehouse w: wares) {
             for (int i = 0; i < n_products; i++) {
@@ -158,12 +159,12 @@ vector<Drone::LoadCommand> Simulation::locateObjects(Order o) {
                     continue;
                 }
                 else {
-
+                    Drone::LoadCommand lc;
                     takeInWarehouse(w, o, lc, i, numb, charge);
+                    command.push_back(lc);
                 }
             }
         }
-        commands.push_back(lc);
         for (int i = 0; i < n_products; i++) {
             if (o.product_quantities[i] != 0) {
                 finished = false;
@@ -173,17 +174,18 @@ vector<Drone::LoadCommand> Simulation::locateObjects(Order o) {
                 finished = true;
             }
         }
+        commands.push_back(command);
     }
     return commands;
 }
 
 void Simulation::processOrders() {
     vector<Order> toDo(orders);
-    vector<Drone::LoadCommand> commands;
+    vector<vector<Drone::LoadCommand>> commands;
 
     for (Order o: toDo) {
-        vector<Drone::LoadCommand> temp = locateObjects(o);
-        for (Drone::LoadCommand c: temp) {
+        vector<vector<Drone::LoadCommand>> temp = locateObjects(o);
+        for (vector<Drone::LoadCommand> c: temp) {
             commands.push_back(c);
         }
     }
