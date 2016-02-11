@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Warehouse {
+struct Warehouse {
     int r, c;
     int id;
 

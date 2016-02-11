@@ -8,8 +8,6 @@
 struct Product {
     int weight;
 
-    Product(int weight) : weight(weight) {
-    }
 };
 
 #endif //HASH_CODE_PRODUCT_H

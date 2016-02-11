@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Order {
+struct Order {
     int r, c;
 
     vector<int> product_quantities;

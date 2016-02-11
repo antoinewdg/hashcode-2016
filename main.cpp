@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 
+#include "simulation.h"
+
 using namespace std;
 
 void parse_file(string filename) {
@@ -25,6 +27,7 @@ void parse_file(string filename) {
 
 int main() {
 //    cout << "Hello, World!" << endl;
-    parse_file("files/sample.txt");
+    Simulation sim("files/in/busy_day.in");
+    cout << sim;
     return 0;
 }
