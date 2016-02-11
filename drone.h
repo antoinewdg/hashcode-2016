@@ -9,25 +9,47 @@
 #include <vector>
 #include <list>
 
+#include "order.h"
+#include "warehouse.h"
+#include "product.h"
+
+
 using namespace std;
 
+
 struct Drone {
+
+    struct LoadCommand {
+        Order *order;
+        Warehouse *w;
+        Product *p;
+        int quantity;
+    };
+
     int id;
     int r, c;
     int unavailable_for;
 
-    list <vector<int>> history;
+    list <LoadCommand> history;
 
     Drone() : unavailable_for(0) { }
 
-    void give_instruction(vector<int> cmd, int t) {
-        cmd.push_back(t);
-        history.push_back(cmd);
-        unavailable_for = distance_between()
+    void give_instruction(vector<LoadCommand> cmds, int t) {
+        for (LoadCommand cmd : cmds) {
+            history.push_back(cmd);
+            unavailable_for += time_to_travel(cmd.w->r, cmd.w->c) + 1;
+            r = cmd.w->r;
+            c = cmd.w->r;
+        }
+
+        unavailable_for += time_to_travel(cmds.back().order->r, cmds.back().order->c) + 1;
+        r = cmds.back().order->r;
+        c = cmds.back().order->c;
+
     }
 
-    double distance_between(int r1, int c1, int r2, int c2) {
-        return sqrt(pow(r1 - r2, 2,) + pow(c1 - c2, 2));
+    double time_to_travel(int r2, int c2) {
+        return ceil(sqrt(pow(r - r2, 2) + pow(c - c2, 2)));
     }
 };
 

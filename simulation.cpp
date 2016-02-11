@@ -2,6 +2,7 @@
 // Created by antoinewdg on 2/11/16.
 //
 
+#include <list>
 #include "simulation.h"
 
 Simulation::Simulation(string filename) {
@@ -131,8 +132,8 @@ ostream &operator<<(ostream &os, const Simulation &s) {
 }
 
 
-vector<vector<int>> Simulation::locateObjects(Order o) {
-    vector<vector<int>> commands;
+vector<Drone::LoadCommand> Simulation::locateObjects(Order o) {
+    vector<Drone::LoadCommand> commands;
     vector<Warehouse> wares(warehouses);
     sort(wares.begin(), wares.end(), [&o](Warehouse w1, Warehouse w2) {
         double dist1 = pow((w1.r - o.r), 2) + pow(w1.c - o.c, 2);
@@ -143,8 +144,7 @@ vector<vector<int>> Simulation::locateObjects(Order o) {
 
     bool finished = false;
     while (!finished) {
-        vector<int> command;
-        command.push_back(o.id);
+        Drone::LoadCommand lc;
         int charge = 0;
         for (Warehouse w: wares) {
             for (int i = 0; i < n_products; i++) {
@@ -158,11 +158,12 @@ vector<vector<int>> Simulation::locateObjects(Order o) {
                     continue;
                 }
                 else {
-                    takeInWarehouse(w, o, command, i, numb, charge);
+
+                    takeInWarehouse(w, o, lc, i, numb, charge);
                 }
             }
         }
-        commands.push_back(command);
+        commands.push_back(lc);
         for (int i = 0; i < n_products; i++) {
             if (o.product_quantities[i] != 0) {
                 finished = false;
@@ -182,14 +183,36 @@ void Simulation::processOrders() {
     vector<vector<int>> commands;
 
     for (Order o: toDo) {
-        vector<vector<int>> temp = locateObjects(o);
-        for (vector<int> c: temp) {
+        vector<Drone::LoadCommand> temp = locateObjects(o);
+        for (Drone::LoadCommand c: temp) {
             commands.push_back(c);
         }
     }
 
+    int c = 0;
     for (int t = 0; t < t_max; t++) {
+        list<Drone> availableDrones = update_drones();
 
+        for (Drone d: availableDrones) {
+            d.give_instruction(commands[c], t);
+            c++;
+        }
+
+//        for (vector<int> command: commands) {
+//            Order o = orders[command[0]];
+//
+//            for (int w = 0; w < command.size() / 3; w++) {
+//                Warehouse ware = warehouses[command[w * 3 + 1]];
+//                Product p = products[command[w * 3 + 2]];
+//                int number = command[w * 3 + 3];
+//
+//                int time = time_for_operation(o.r, o.c, ware.r, ware.c);
+//
+//
+//
+//
+//            }
+//        }
 
     }
 
@@ -211,4 +234,9 @@ void Simulation::update_drones() {
             d.unavailable_for--;
         }
     }
+}
+
+int Simulation::time_for_operation(int r1, int c1, int r2, int c2) {
+    double temp = sqrt(pow(r1 - r2, 2) + pow(c1 - c2, 2));
+    return floor(temp) + 2;
 }

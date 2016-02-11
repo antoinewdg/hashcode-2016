@@ -19,6 +19,9 @@
 using namespace std;
 
 struct Simulation {
+
+
+
     int rows, cols, n_drones, t_max, payload;
     int n_products, n_warehouses, n_orders;
 
@@ -30,28 +33,32 @@ struct Simulation {
     Simulation(string filename);
 
 
-    void takeInWarehouse(Warehouse &w, Order &o, vector<int> &command, int i, int numb, int &charge) {
+    void takeInWarehouse(Warehouse &w, Order &o, Drone::LoadCommand &command, int i, int numb, int &charge) {
         int weight = products[i].weight;
         if (w.product_quantities[i] >= numb) {
             w.product_quantities[i] -= numb;
             o.product_quantities[i] -= numb;
-            command.push_back(w.id);
-            command.push_back(i);
-            command.push_back(numb);
+            command.order = &o;
+            command.w = &w;
+            command.p = &products[i];
+            command.quantity = numb;
             charge += numb * weight;
         }
         else {
             o.product_quantities[i] -= w.product_quantities[i];
-            command.push_back(w.id);
-            command.push_back(i);
-            command.push_back(w.product_quantities[i]);
+            command.order = &o;
+            command.w = &w;
+            command.p = &products[i];
+            command.quantity = w.product_quantities[i];
             charge += w.product_quantities[i] * weight;
             w.product_quantities[i] = 0;
         }
     };
 
 
-    vector<vector<int>> locateObjects(Order o);
+    int time_for_operation(int r1, int c1, int r2, int c2);
+
+    vector<Drone::LoadCommand> locateObjects(Order o);
 
     bool droneAvailable();
 
