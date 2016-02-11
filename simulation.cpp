@@ -192,7 +192,9 @@ void Simulation::processOrders() {
 
     int c = 0;
     for (int t = 0; t < t_max; t++) {
+
         list<Drone *> availableDrones = available_drones();
+
 
         for (Drone *d: availableDrones) {
             d->give_instruction(commands[c], t);
@@ -218,6 +220,14 @@ void Simulation::processOrders() {
         update_drones();
     }
 
+    ofstream file("files/out/test.out");
+
+    for (Drone d : drones) {
+        d.write_history(file);
+    }
+
+    file.close();
+
 }
 
 bool Simulation::droneAvailable() {
@@ -232,7 +242,9 @@ bool Simulation::droneAvailable() {
 
 
 list<Drone *> Simulation::available_drones() {
+
     list<Drone *> available;
+
 
     for (Drone &d : drones) {
         if (d.unavailable_for == 0) {
