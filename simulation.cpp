@@ -178,9 +178,8 @@ vector<Drone::LoadCommand> Simulation::locateObjects(Order o) {
 }
 
 void Simulation::processOrders() {
-
     vector<Order> toDo(orders);
-    vector<vector<int>> commands;
+    vector<Drone::LoadCommand> commands;
 
     for (Order o: toDo) {
         vector<Drone::LoadCommand> temp = locateObjects(o);
